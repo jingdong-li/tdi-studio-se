@@ -184,7 +184,7 @@ if(hasInput){
         
         org.apache.avro.generic.IndexedRecord data_<%=cid%> = null;
         if (incomingEnforcer_<%=cid%> != null) {
-            incomingEnforcer_<%=cid%>.getCurrentRecord();
+            data_<%=cid%> = incomingEnforcer_<%=cid%>.getCurrentRecord();
         }
         
         <%
