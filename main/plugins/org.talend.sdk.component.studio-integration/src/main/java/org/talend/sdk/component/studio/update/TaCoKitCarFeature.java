@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.equinox.p2.metadata.Version;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.runtime.service.ITaCoKitService;
 import org.talend.commons.utils.resource.FileExtensions;
@@ -63,6 +64,8 @@ public class TaCoKitCarFeature extends AbstractExtraFeature implements ITaCoKitC
     private TaCoKitCar car;
 
     private Object carLock = new Object();
+    
+    private boolean isDeployCommand = false;
 
     public TaCoKitCarFeature(ComponentIndexBean indexBean) {
         super(indexBean.getBundleId(), indexBean.getName(), indexBean.getVersion(), indexBean.getDescription(),
@@ -154,11 +157,19 @@ public class TaCoKitCarFeature extends AbstractExtraFeature implements ITaCoKitC
     public boolean install(IProgressMonitor progress) throws Exception {
         String tckCarPath = getCar(progress).getCarFile().getAbsolutePath();
         String installationPath = URIUtil.toFile(URIUtil.toURI(Platform.getInstallLocation().getURL())).getAbsolutePath();
-
+        String commandType = " studio-deploy ";
         StringBuilder commandBuilder = new StringBuilder();
         commandBuilder.append("java -jar "); //$NON-NLS-1$
         commandBuilder.append(StringUtils.wrap(tckCarPath, "\"")); //$NON-NLS-1$
-        commandBuilder.append(" studio-deploy "); //$NON-NLS-1$
+        if (isDeployCommand) {
+            installationPath = MavenPlugin.getMaven().getLocalRepositoryPath();
+            File m2Folder = new File(installationPath);
+            if (!m2Folder.exists()) {
+                m2Folder.mkdir();
+            }
+            commandType = " maven-deploy ";
+        }
+        commandBuilder.append(commandType); //$NON-NLS-1$
         commandBuilder.append(StringUtils.wrap(installationPath, "\"")); //$NON-NLS-1$
         String command = commandBuilder.toString();
 
@@ -452,5 +463,10 @@ public class TaCoKitCarFeature extends AbstractExtraFeature implements ITaCoKitC
             workFolder.mkdirs();
         }
         ((AbstractFeatureStorage) getStorage()).setFeatDownloadFolder(workFolder);
+    }
+
+    @Override
+    public void setDeployCommand(boolean isDeployCommand){
+        this.isDeployCommand = isDeployCommand;     
     }
 }
