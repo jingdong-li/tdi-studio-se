@@ -37,6 +37,7 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.runtime.service.ITaCoKitService;
 import org.talend.commons.utils.resource.FileExtensions;
 import org.talend.core.runtime.maven.MavenUrlHelper;
+import org.talend.core.runtime.projectsetting.IProjectSettingTemplateConstants;
 import org.talend.sdk.component.studio.i18n.Messages;
 import org.talend.sdk.component.studio.util.TaCoKitConst;
 import org.talend.sdk.component.studio.util.TaCoKitUtil;
@@ -162,11 +163,11 @@ public class TaCoKitCarFeature extends AbstractExtraFeature implements ITaCoKitC
         commandBuilder.append("java -jar "); //$NON-NLS-1$
         commandBuilder.append(StringUtils.wrap(tckCarPath, "\"")); //$NON-NLS-1$
         if (isDeployCommand) {
-            installationPath = MavenPlugin.getMaven().getLocalRepositoryPath();
-            File m2Folder = new File(installationPath);
+            File m2Folder =this.getM2RepositoryPath();
             if (!m2Folder.exists()) {
                 m2Folder.mkdir();
             }
+            installationPath = m2Folder.getAbsolutePath();
             commandType = " maven-deploy ";
         }
         commandBuilder.append(commandType); //$NON-NLS-1$
@@ -223,6 +224,24 @@ public class TaCoKitCarFeature extends AbstractExtraFeature implements ITaCoKitC
             throw new Exception(getErrorMessage(exec));
         }
         return true;
+    }
+    
+    private File getM2RepositoryPath() {
+        String configFolder = Platform.getConfigurationLocation().getURL().getPath();
+        File mavenUserSettingFile = new File(configFolder,
+                IProjectSettingTemplateConstants.MAVEN_USER_SETTING_TEMPLATE_FILE_NAME);
+        File m2Repo= null;
+        if (mavenUserSettingFile.exists()) {
+            m2Repo = new File(MavenPlugin.getMaven().getLocalRepositoryPath());
+        }
+        if (m2Repo == null) {
+            File m2Folder = new File(configFolder, ".m2");
+            m2Repo = new File (m2Folder, "repository");
+        }
+        if (!m2Repo.exists()) {
+            m2Repo.mkdirs();
+        }
+        return m2Repo;
     }
 
     private String getErrorMessage(Process exec) {
