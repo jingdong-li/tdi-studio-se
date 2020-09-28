@@ -372,6 +372,7 @@ public class UIManager extends AbstractUIManager {
         ToolbarZone toolbar = null;
         if (currentZone == Zone.INPUTS) {
             toolbar = getInputsZone().getToolbar();
+            ((ToolbarInputZone) toolbar).setEnabledRenameAliasButton(currentSelectedInputTableView != null);
             ((ToolbarInputZone) toolbar).setEnabledRemoveAliasButton(currentSelectedInputTableView != null);
             toolbar.setEnabledMinimizeTablesButton(getInputsTablesView().size() > 0);
         } else if (currentZone == Zone.OUTPUTS) {
@@ -1105,7 +1106,7 @@ public class UIManager extends AbstractUIManager {
         TableEntryLocation previousLocation = new TableEntryLocation(currentModifiedITableEntry.getParentName(),
                 previousColumnName);
         TableEntryLocation newLocation = new TableEntryLocation(currentModifiedITableEntry.getParentName(), newColumnName);
-        mapperManager.replacePreviousLocationInAllExpressions(previousLocation, newLocation);
+        mapperManager.replacePreviousLocationInAllExpressions(previousLocation, newLocation, false);
         refreshSqlExpression();
 
         if (!renamingDependentEntries) {

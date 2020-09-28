@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.designer.dbmap.ui.dialog;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -31,9 +32,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.talend.core.model.process.Problem;
 import org.talend.core.utils.KeywordsValidator;
+import org.talend.designer.abstractmap.model.table.IDataMapTable;
 import org.talend.designer.dbmap.i18n.Messages;
 import org.talend.designer.dbmap.managers.MapperManager;
 import org.talend.designer.dbmap.managers.UIManager;
+import org.talend.designer.dbmap.model.table.InputTable;
+import org.talend.designer.dbmap.ui.visualmap.table.InputDataMapTableView;
 import org.talend.designer.dbmap.utils.problems.ProblemsAnalyser;
 
 /**
@@ -58,6 +62,8 @@ public class AliasDialog {
 
     private String[] visibleTables;
 
+    private boolean update = false;
+
     ProblemsAnalyser problemsAnalyser;
 
     /**
@@ -65,18 +71,18 @@ public class AliasDialog {
      *
      * @param manager
      */
-    public AliasDialog(MapperManager manager, String[] physicalTables, String[] aliases, String[] visibleTables) {
+    public AliasDialog(MapperManager manager, String[] physicalTables, String[] aliases, String[] visibleTables, boolean update) {
         this.mapperManager = manager;
         this.physicalTables = physicalTables;
         this.aliases = aliases;
         this.visibleTables = visibleTables;
+        this.update = update;
         problemsAnalyser = new ProblemsAnalyser(mapperManager);
     }
 
     public boolean open() {
 
         UIManager uiManager = this.mapperManager.getUiManager();
-
         // String inputTableName = getCurrentSelectedInputTableView().getDataMapTable().getName();
         //
         String proposedAlias = ""; //$NON-NLS-1$
@@ -98,7 +104,7 @@ public class AliasDialog {
                 if (selectedPhysicalTable == null || selectedPhysicalTable.length() == 0) {
                     return Messages.getString("AliasDialog.TableMustBeSelected"); //$NON-NLS-1$
                 }
-                if (isSameAsVisibleTableName(newText)) {
+                if (isSameAsVisibleTableName(newText) && !update) {
                     return Messages.getString("AliasDialog.aliasAlreadyExists", new Object[] { newText }); //$NON-NLS-1$
                 }
                 if (KeywordsValidator.isKeyword(newText) || KeywordsValidator.isSqlKeyword(newText)) {
@@ -108,9 +114,8 @@ public class AliasDialog {
             }
 
         };
-
         aliasInternalDialog = new AliasInternalDialog(mapperManager.getUiManager().getShell(),
-                Messages.getString("AliasDialog.addNewAlias"), //$NON-NLS-1$
+                update ? Messages.getString("AliasDialog.renameAlias") : Messages.getString("AliasDialog.addNewAlias"), //$NON-NLS-1$ //$NON-NLS-2$
                 Messages.getString("AliasDialog.typeAliasOfTable"), proposedAlias, inputValidator); //$NON-NLS-1$
 
         int response = aliasInternalDialog.open();
@@ -267,7 +272,9 @@ public class AliasDialog {
             // button
             combo.setFocus();
             if (value != null) {
-                text.setText(value);
+                if (!update) {
+                    text.setText(value);
+                }
                 text.selectAll();
             }
         }
@@ -330,7 +337,28 @@ public class AliasDialog {
             setErrorMessage(errorMessage);
 
             applyDialogFont(composite);
+            init();
             return composite;
+        }
+
+        protected void init() {
+            if (update) {
+                UIManager uiManager = mapperManager.getUiManager();
+                InputDataMapTableView currentSelectedInputTable = uiManager.getCurrentSelectedInputTableView();
+                if (currentSelectedInputTable != null) {
+                    IDataMapTable inputTable = currentSelectedInputTable.getDataMapTable();
+                    if (inputTable != null && inputTable instanceof InputTable) {
+                        String inputTableName = ((InputTable) inputTable).getTableName();
+                        String alias = ((InputTable) inputTable).getAlias();
+                        aliasInternalDialog.getCombo().setText(inputTableName);
+                        aliasInternalDialog.getCombo().setEnabled(false);
+                        internalTableName = inputTableName;
+                        if (StringUtils.isNotBlank(alias)) {
+                            aliasInternalDialog.getText().setText(alias);
+                        }
+                    }
+                }
+            }
         }
 
         /**
@@ -351,6 +379,10 @@ public class AliasDialog {
          */
         protected Button getOkButton() {
             return okButton;
+        }
+
+        public Combo getCombo() {
+            return this.combo;
         }
 
         /**
