@@ -731,7 +731,7 @@ public class MapperManager extends AbstractMapperManager {
                 }
             }
             tableViewerCreator.getTableViewer().refresh(entry);
-            uiManager.parseExpression(currentExpression, entry, false, true, false);
+            uiManager.parseExpression(currentExpression, entry, false, true, false, renamed);
             return true;
         }
         return false;
@@ -883,6 +883,7 @@ public class MapperManager extends AbstractMapperManager {
                 // Update expressions
                 TableEntryLocation oldLocation = new TableEntryLocation(oldName, null);
                 TableEntryLocation newLocation = new TableEntryLocation(inputTable.getName(), null);
+                updateTableEntries(inputTable, oldName, inputTable.getName());
                 // mapperComponent.replaceLocationsInAllExpressions(oldLocation, newLocation, true);
                 replacePreviousLocationInAllExpressions(oldLocation, newLocation, true);
 
@@ -896,6 +897,13 @@ public class MapperManager extends AbstractMapperManager {
                 uiManager.refreshSqlExpression();
                 getProblemsManager().checkProblemsForAllEntriesOfAllTables(true);
             }
+        }
+    }
+
+    public void updateTableEntries(InputTable inputTable, String oldName, String newName) {
+        List<IColumnEntry> columnEntries = inputTable.getColumnEntries();
+        for (IColumnEntry entry : columnEntries) {
+            tableEntriesManager.updateTableEntryLocation(entry, oldName, newName);
         }
     }
 
