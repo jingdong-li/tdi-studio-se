@@ -54,13 +54,17 @@ public class LoginNetworkPreferencePage extends PreferencePage {
 
     @Override
     public boolean performOk() {
-        retryForm.performFinish();
+        if (this.isControlCreated()) {
+            retryForm.performFinish();
+        }
         return super.performOk();
     }
 
     @Override
     protected void performDefaults() {
-        retryForm.performDefault();
+        if (this.isControlCreated()) {
+            retryForm.performDefault();
+        }
         super.performDefaults();
     }
 
@@ -71,7 +75,7 @@ public class LoginNetworkPreferencePage extends PreferencePage {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && retryForm.isComplete();
+        return super.isValid() && (this.isControlCreated() && retryForm.isComplete());
     }
 
 }

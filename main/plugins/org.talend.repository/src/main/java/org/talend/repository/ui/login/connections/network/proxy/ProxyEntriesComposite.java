@@ -43,7 +43,7 @@ import org.eclipse.ui.internal.net.ProxyEntryDialog;
  * 
  * @see org.eclipse.ui.internal.net.ProxyEntriesComposite
  */
-public class LoginProxyEntriesComposite extends Composite {
+public class ProxyEntriesComposite extends Composite {
 
     private Label entriesLabel;
 
@@ -58,7 +58,7 @@ public class LoginProxyEntriesComposite extends Composite {
 
     private ArrayList<ProxyData> proxyEntries = new ArrayList<>();
 
-    public LoginProxyEntriesComposite(Composite parent, int style) {
+    public ProxyEntriesComposite(Composite parent, int style) {
         super(parent, style);
         createWidgets();
     }

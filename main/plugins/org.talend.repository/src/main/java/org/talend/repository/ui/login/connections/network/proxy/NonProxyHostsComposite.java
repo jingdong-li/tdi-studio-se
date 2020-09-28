@@ -47,7 +47,7 @@ import org.eclipse.ui.internal.net.ProxyBypassData;
  * 
  * @see org.eclipse.ui.internal.net.NonProxyHostsComposite
  */
-public class LoginNonProxyHostsComposite extends Composite {
+public class NonProxyHostsComposite extends Composite {
 
     private Label hostsLabel;
 
@@ -63,7 +63,7 @@ public class LoginNonProxyHostsComposite extends Composite {
 
     private ArrayList<ProxyBypassData> bypassHosts = new ArrayList<>();
 
-    public LoginNonProxyHostsComposite(Composite parent, int style) {
+    public NonProxyHostsComposite(Composite parent, int style) {
         super(parent, style);
         createWidgets();
     }
