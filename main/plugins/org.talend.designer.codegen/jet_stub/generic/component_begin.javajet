@@ -403,16 +403,16 @@ if (hasOutputOnly || asInputComponent) {
         writer_<%=cid%>.open("<%=cid%>");
 
         resourceMap.put("writer_<%=cid%>", writer_<%=cid%>);
-
-        org.talend.components.api.component.Connector c_<%=cid%> = null;
-        for (org.talend.components.api.component.Connector currentConnector : props_<%=cid %>.getAvailableConnectors(null, false)) {
-        	if (currentConnector.getName().equals("MAIN")) {
-            	c_<%=cid%> = currentConnector;
-            	break;
-            }
+    } // end of "sourceOrSink_<%=cid%> instanceof ...Sink"
+    org.talend.components.api.component.Connector c_<%=cid%> = null;
+    for (org.talend.components.api.component.Connector currentConnector : props_<%=cid %>.getAvailableConnectors(null, false)) {
+        if (currentConnector.getName().equals("MAIN")) {
+            c_<%=cid%> = currentConnector;
+            break;
         }
-        org.apache.avro.Schema designSchema_<%=cid%> = props_<%=cid %>.getSchema(c_<%=cid%>, false);
-        incomingEnforcer_<%=cid%> = new org.talend.codegen.enforcer.IncomingSchemaEnforcer(designSchema_<%=cid%>);
+    }
+    org.apache.avro.Schema designSchema_<%=cid%> = props_<%=cid %>.getSchema(c_<%=cid%>, false);
+    incomingEnforcer_<%=cid%> = new org.talend.codegen.enforcer.IncomingSchemaEnforcer(designSchema_<%=cid%>);
     <%
     List<? extends IConnection> outgoingConns = node.getOutgoingSortedConnections();
     if (outgoingConns!=null){
@@ -448,9 +448,7 @@ if (hasOutputOnly || asInputComponent) {
         }
     }
 }
-if (hasInput) { %>
-    } // end of "sourceOrSink_<%=cid%> instanceof ...Sink"
-<%} %>
+ %>
     
                 java.lang.Iterable<?> outgoingMainRecordsList_<%=cid%> = new java.util.ArrayList<Object>();
                 java.util.Iterator outgoingMainRecordsIt_<%=cid%> = null;
