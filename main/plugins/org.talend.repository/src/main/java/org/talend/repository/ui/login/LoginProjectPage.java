@@ -99,6 +99,7 @@ import org.talend.core.repository.model.provider.LoginConnectionManager;
 import org.talend.core.repository.services.ILoginConnectionService;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.runtime.util.SharedStudioUtils;
 import org.talend.core.services.ICoreTisService;
 import org.talend.core.services.IGITProviderService;
 import org.talend.core.ui.TalendBrowserLaunchHelper;
@@ -1513,10 +1514,16 @@ public class LoginProjectPage extends AbstractLoginActionPage {
                     overTimePopupDialogTask.setNeedWaitingProgressJob(false);
                     boolean needUpdate = overTimePopupDialogTask.runTask();
 
-                    if (needUpdate && isWorkSpaceSame()) {
-                        refreshProjectOperationAreaEnable(false);
-                        errorManager.setErrMessage(Messages.getString("LoginProjectPage.updateArchiva")); //$NON-NLS-1$
-                        changeFinishButtonAction(FINISH_ACTION_UPDATE);
+                    if (!SharedStudioUtils.isSharedStudioMode()) {
+                        if (needUpdate && isWorkSpaceSame()) {
+                            refreshProjectOperationAreaEnable(false);
+                            errorManager.setErrMessage(Messages.getString("LoginProjectPage.updateArchiva")); //$NON-NLS-1$
+                            changeFinishButtonAction(FINISH_ACTION_UPDATE);
+                        }
+                    } else {
+                        if (needUpdate) {
+                            errorManager.setWarnMessage(Messages.getString("LoginProjectPage.updateSharedMode")); //$NON-NLS-1$ 
+                        }
                     }
                 }
             }
