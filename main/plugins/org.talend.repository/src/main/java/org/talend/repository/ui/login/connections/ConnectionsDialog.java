@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.commons.ui.runtime.image.ImageProvider;
 import org.talend.commons.utils.network.NetworkUtil;
 import org.talend.core.GlobalServiceRegister;
+import org.talend.core.PluginChecker;
 import org.talend.core.model.general.ConnectionBean;
 import org.talend.core.ui.branding.IBrandingService;
 import org.talend.repository.i18n.Messages;
@@ -167,6 +168,9 @@ public class ConnectionsDialog extends TitleAreaDialog {
     }
 
     private void createNetworkSettings(Composite container) {
+        if (!PluginChecker.isTIS()) {
+            return;
+        }
         Composite bottomPart = new Composite(container, SWT.NONE);
         bottomPart.setBackground(ColorConstants.white);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BOTTOM).applyTo(bottomPart);
