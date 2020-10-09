@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -558,12 +558,8 @@ public class ComponentSettingsView extends ViewPart implements IComponentSetting
                 label = label + "(" + uniqueName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
             }
             if (node.getComponent() != node.getDelegateComponent()) {
-                String componentName = node.getComponent().getName();
-                if (StringUtils.isNoneBlank(node.getUnifiedComponentDisplayName())) {
-                    componentName = node.getUnifiedComponentDisplayName();
-                }
-                String dispalyName = UnifiedComponentUtil.getUnifiedComponentDisplayName(node.getDelegateComponent(),
-                        componentName);
+                String dispalyName = UnifiedComponentUtil.getUnifiedComponentDisplayName(node.getDelegateComponent(), node
+                        .getComponent().getName());
                 if (dispalyName != null) {
                     label = label + "(" + dispalyName + ")";
                 }
@@ -711,6 +707,10 @@ public class ComponentSettingsView extends ViewPart implements IComponentSetting
                 String paletteType = ((Node) elem).getComponent().getPaletteType();
                 if (ComponentCategory.CATEGORY_4_CAMEL.getName().equals(paletteType)) {
                     categories = EElementType.NODE.getCategories();
+                    //camel
+                    if(((Node) elem).getStatus() == 1) {
+                        categories = (EComponentCategory[]) ArrayUtils.add(categories, EComponentCategory.BREAKPOINT_CAMEL);
+                    }
                 }
             }
 
