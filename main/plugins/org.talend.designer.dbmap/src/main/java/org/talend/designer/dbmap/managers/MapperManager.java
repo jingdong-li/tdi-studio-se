@@ -676,9 +676,7 @@ public class MapperManager extends AbstractMapperManager {
                     replaceLocation(previousLocation, newLocation, dataMapExpressionParser, table, entry, renamed);
                 }
             }
-
         }
-        uiManager.refreshBackground(false, false);
     }
 
     /**
@@ -887,6 +885,7 @@ public class MapperManager extends AbstractMapperManager {
                 // mapperComponent.replaceLocationsInAllExpressions(oldLocation, newLocation, true);
                 replacePreviousLocationInAllExpressions(oldLocation, newLocation, true);
 
+                uiManager.refreshBackground(false, false);
                 uiManager.updateToolbarButtonsStates(Zone.INPUTS);
                 currentSelectedDataMapTableView.updateSelectedDataMapTableViewTitle();
                 // Update tab

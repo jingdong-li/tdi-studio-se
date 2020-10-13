@@ -1115,6 +1115,7 @@ public class UIManager extends AbstractUIManager {
                 previousColumnName);
         TableEntryLocation newLocation = new TableEntryLocation(currentModifiedITableEntry.getParentName(), newColumnName);
         mapperManager.replacePreviousLocationInAllExpressions(previousLocation, newLocation, false);
+        mapperManager.getUiManager().refreshBackground(false, false);
         refreshSqlExpression();
 
         if (!renamingDependentEntries) {
