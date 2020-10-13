@@ -31,7 +31,7 @@
    * DOC Administrator class global comment. Detailled comment
    */
   @SuppressWarnings("deprecation")
-  public class UncheckExceptionOnFileExistMigrationTask extends AbstractJobMigrationTask {
+  public class UncheckTrustAllMigrationTask extends AbstractJobMigrationTask {
 
   	@Override
   	public ExecutionResult execute(Item item) {
