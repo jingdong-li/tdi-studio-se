@@ -386,7 +386,6 @@ if (hasOutputOnly || asInputComponent) {
 				}
 			%>
 			} // end of catch 
-		} // end of "if (sourceOrSink_<%=cid%> instanceof ...Source)"
     <%
     // The for loop around the incoming records from the reader is left open.
 

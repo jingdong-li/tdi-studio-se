@@ -58,7 +58,11 @@ if(isTopologyNone) {
 else if(hasOutputOnly || asInputComponent){
 %>
     } // while
-    
+<%
+    if (hasOutputOnly || asInputComponent) {
+%>  
+    } // end of "if (sourceOrSink_<%=cid%> instanceof ...Source)"
+<% } %>
     java.util.Map<String, Object> resultMap_<%=cid%> = null;
     if (reader_<%=cid%> != null) {
         reader_<%=cid%>.close();
