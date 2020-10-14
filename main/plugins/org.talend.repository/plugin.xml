@@ -3453,6 +3453,7 @@
                id="org.talend.repository.model.migration.TeradataTPTAddDatabaseNameToOptionalTablesMigrationTask"
                name="TeradataTPTAddDatabaseNameToOptionalTablesMigrationTask"
                version="7.3.1">
+       </projecttask>
 	   <projecttask
                beforeLogon="false"
                breaks="7.3.0"
@@ -3461,7 +3462,6 @@
                id="org.talend.repository.model.migration.UncheckTrustAllMigrationTask"
                name="UncheckTrustAllMigrationTask"
                version="7.3.1">
-       </projecttask>
        </projecttask>
    </extension>
 
