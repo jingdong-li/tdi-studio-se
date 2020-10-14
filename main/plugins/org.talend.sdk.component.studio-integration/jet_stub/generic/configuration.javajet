@@ -85,9 +85,9 @@ final java.util.Map<String, String> registry_metadata_<%=cid%> = new java.util.H
                         }
                     }
                     if (!hasDynamic){
-                        String [] a = java.util.Optional.ofNullable(p.getListItemsDisplayCodeName()).orElse(new String[0]);
+                        String [] columnMetas = java.util.Optional.ofNullable(p.getListItemsDisplayCodeName()).orElse(new String[0]);
                         List<String> metas = new java.util.ArrayList();
-                        for (String k : a){
+                        for (String k : columnMetas){
                             metas.add(k.substring(k.lastIndexOf(".")+1));
                         }
                         for(int i = 0; i < columns.size(); i++) {
