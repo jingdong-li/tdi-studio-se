@@ -227,7 +227,7 @@
                         java.io.File attachFile = new java.io.File(path);
                         try (java.io.BufferedOutputStream out = new java.io.BufferedOutputStream(new java.io.FileOutputStream(attachFile));
                             java.io.BufferedInputStream in = new java.io.BufferedInputStream(mpart.getInputStream())){
-                            byte[] buffer = new byte[4096];
+                            byte[] buffer = new byte[8192];
                             int bytesRead = 0;
                             while ((bytesRead = in.read(buffer)) > 0) {
                                 out.write(buffer, 0, bytesRead);
