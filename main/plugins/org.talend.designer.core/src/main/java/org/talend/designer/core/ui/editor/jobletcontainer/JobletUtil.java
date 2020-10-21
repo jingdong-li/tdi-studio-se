@@ -390,8 +390,8 @@ public class JobletUtil {
         ComponentProperties nodeComponentProperties = node.getComponentProperties();
         ComponentProperties cloneNodeComponentProperties = cloneNode.getComponentProperties();
         if (nodeComponentProperties != null && cloneNodeComponentProperties != null) {
-            Properties referencedComponentProperties = nodeComponentProperties.getProperties("referencedComponent");//$NON-NLS-1$
-            Properties cloneNodeProperties = cloneNodeComponentProperties.getProperties("referencedComponent");//$NON-NLS-1$
+            Properties referencedComponentProperties = findOutReferencedComponentProperties(nodeComponentProperties);
+            Properties cloneNodeProperties = findOutReferencedComponentProperties(cloneNodeComponentProperties);
             if (referencedComponentProperties != null && cloneNodeProperties != null) {
                 List<NamedThing> nodeProperties = referencedComponentProperties.getProperties();
                 List<NamedThing> cloneProperties = cloneNodeProperties.getProperties();
@@ -406,6 +406,24 @@ public class JobletUtil {
                 }
             }
         }
+    }
+
+    private Properties findOutReferencedComponentProperties(Properties properties) {
+        Properties refProperties = properties.getProperties("referencedComponent");//$NON-NLS-1$
+        if (refProperties != null) {
+            return refProperties;
+        }
+        List<NamedThing> propertiesList = properties.getProperties();
+        for (NamedThing namedThing : propertiesList) {
+            if (namedThing instanceof Properties) {
+                Properties subProperties = (Properties) namedThing;
+                refProperties = findOutReferencedComponentProperties(subProperties);
+                if (refProperties != null) {
+                    break;
+                }
+            }
+        }
+        return refProperties;
     }
 
     public void updateNode(Node cloneNode, Node node) {
